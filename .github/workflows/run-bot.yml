@@ -1,0 +1,29 @@
+name: Discord Bot CI/CD
+
+on:
+  push:
+    branches:
+      - main
+  workflow_dispatch: # 允許手動觸發
+
+jobs:
+  run-bot:
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: Checkout repository
+      uses: actions/checkout@v4
+
+    - name: Set up Python
+      uses: actions/setup-python@v5
+      with:
+        python-version: '3.x'
+
+    - name: Install dependencies
+      run: pip install -r requirements.txt
+
+    - name: Run Discord Bot
+      env:
+        DISCORD_TOKEN: ${{ secrets.DISCORD_TOKEN }}
+        OPENCLAW_GATEWAY_URL: ${{ secrets.OPENCLAW_GATEWAY_URL }} # 此處需要您的 OpenClaw Gateway 公開可訪問的 URL
+      run: python bot.py
